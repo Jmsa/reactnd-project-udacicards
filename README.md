@@ -4,6 +4,7 @@
 
 ## Todo
 * **Hook up AsyncStorage and clean up storage states**
-* Update readme 
 * Convert decklist + map to use `FlatList`
 * Clean up UI styles and layout
+* Update readme 
+* General clean up - variable names, commentary, etc.
