@@ -1,10 +1,9 @@
 ## Installation and running
-* Clone repo `git clone asdfasdfasdf`
+* Clone repo `git clone https://github.com/Jmsa/reactnd-project-udacicards`
 * Install dependencies and run `yarn install && yarn start`
 
 ## Todo
-* **Hook up AsyncStorage**
+* **Hook up AsyncStorage and clean up storage states**
 * Update readme 
-    * Basic install steps
-* Convert decklist map to use something like `FlatList`
-* Clean up UI styles
+* Convert decklist + map to use `FlatList`
+* Clean up UI styles and layout
