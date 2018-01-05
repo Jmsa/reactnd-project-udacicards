@@ -9,7 +9,8 @@ const reducer = (state=initState, action) => {
     const { decks } = action;
     switch (action.type) {
         case ADD_DECK: {
-            const newDecks = state.decks;
+            const newDecks = {};
+            Object.assign(newDecks,state.decks);
             newDecks[action.deck.title] = action.deck;
             // AsyncStorage.setItem('DECK_LIST', JSON.stringify(newDeckList));
             return {
@@ -35,7 +36,6 @@ const reducer = (state=initState, action) => {
         //     }
         // }
         case GET_DECKS: {
-            console.log('getting decks');
             return {
                 ...state,
                 decks

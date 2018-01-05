@@ -1,25 +1,6 @@
-// To manage your AsyncStorage database, you'll want to create four different helper methods.
-//
-//     getDecks: return all of the decks along with their titles, questions, and answers.
-//     getDeck: take in a single id argument and return the deck associated with that id.
-//     saveDeckTitle: take in a single title argument and add it to the decks.
-//     addCardToDeck: take in two arguments, title and card, and will add the card to the list of questions for the deck with the associated title.
+import {Notifications, Permissions} from 'expo';
+import {View, StyleSheet, AsyncStorage} from 'react-native';
 
-export function getDecks() {
-    return null;
-}
-
-export function getDeck(id) {
-    return null;
-}
-
-export function saveDeckTitle(title) {
-    return null;
-}
-
-export function addCardToDeck(title, card) {
-    return null;
-}
 
 export function createArrayFromObject(obj) {
     const newArray = [];
@@ -49,3 +30,84 @@ export function createObjectFromArray(arr, k = 'id') {
     // Merge the objects into 1.
     return Object.assign(...objects);
 }
+
+
+const NOTIFICATION_KEY = 'UdaciCards:notifications';
+
+export function getDailyReminderValue() {
+    return {
+        today: "👋 Don't forget to log your data today!"
+    }
+}
+
+export function clearLocalNotification() {
+    return AsyncStorage.removeItem(NOTIFICATION_KEY)
+        .then(Notifications.cancelAllScheduledNotificationsAsync)
+}
+
+function createNotification() {
+    return {
+        title: 'Log your stats!',
+        body: "👋 don't forget to log your stats for today!",
+        ios: {
+            sound: true,
+        },
+        android: {
+            sound: true,
+            priority: 'high',
+            sticky: false,
+            vibrate: true,
+        }
+    }
+}
+
+
+export function setLocalNotification() {
+    try {
+        AsyncStorage.getItem(NOTIFICATION_KEY)
+            .then(JSON.parse)
+            .then(data => {
+                if (data === null) {
+                    Permissions.askAsync(Permissions.NOTIFICATIONS)
+                        .then(({status}) => {
+                            if (status === 'granted') {
+                                Notifications.cancelAllScheduledNotificationsAsync();
+                                let soon = new Date();
+                                soon.setSeconds(soon.getSeconds() + 10);
+                                let tomorrow = new Date();
+                                tomorrow.setDate(tomorrow.getDate() + 1);
+                                tomorrow.setHours(20);
+                                tomorrow.setMinutes(0);
+                                Notifications.scheduleLocalNotificationAsync(
+                                    {
+                                        title: 'Reminder',
+                                        body: `Don't forget to complete a quiz.`
+                                    },
+                                    {
+                                        time: soon,
+                                        repeat: 'minute'
+                                    }
+                                );
+                                AsyncStorage.setItem(NOTIFICATION_KEY, JSON.stringify(true));
+                            }
+                        });
+                }
+            })
+    }
+    catch (error) {
+        console.log(error);
+    }
+}
+
+
+const styles = StyleSheet.create({
+    iconContainer: {
+        padding: 5,
+        borderRadius: 8,
+        width: 50,
+        height: 50,
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginRight: 20
+    },
+});

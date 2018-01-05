@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import {View, Text, FlatList, TouchableOpacity, StyleSheet} from 'react-native';
 import {Button} from 'react-native-elements';
+import {clearLocalNotification, setLocalNotification} from '../utils/helpers';
 
 export default class Quiz extends Component {
     static navigationOptions = {
@@ -17,8 +18,21 @@ export default class Quiz extends Component {
     };
 
     componentDidMount() {
+        clearLocalNotification().then(setLocalNotification);
         const {questions, title} = this.props.navigation.state.params;
         this.setState({totalQuestions: questions.length, title: title});
+    };
+
+    resetQuiz = () => {
+        this.setState({
+            currentQuestion: 0,
+            correctQuestions: 0,
+            quizComplete: false,
+        });
+    };
+
+    backToDeckList = () => {
+        this.props.navigation.navigate('DeckList');
     };
 
     questionUI(question, index) {
@@ -59,7 +73,7 @@ export default class Quiz extends Component {
                 <Button
                     style={styles.customButton}
                     onPress={() => this.setState({showAnswer: !this.state.showAnswer})}
-                    title="Toggle Answer"
+                    title="Show Answer"
                     color="white"
                     backgroundColor="#841584"
                 />
@@ -86,6 +100,19 @@ export default class Quiz extends Component {
             <Text style={styles.question}>{title} Results</Text>
             <Text style={styles.answer}>{correctQuestions}/{totalQuestions}</Text>
             <Text style={styles.answer}>{correctQuestions / (totalQuestions / 100)}%</Text>
+
+            <Button
+                onPress={this.resetQuiz}
+                title="Take Quiz Again"
+                backgroundColor="green"
+                color='white'
+            />
+            <Button
+                onPress={this.backToDeckList}
+                title="Pick Another Quiz Deck"
+                backgroundColor="#841584"
+                color='white'
+            />
         </View>;
 
         return (

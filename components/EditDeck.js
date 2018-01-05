@@ -12,13 +12,16 @@ class EditDeck extends Component {
     };
 
     componentDidMount() {
-        const {title, questions} = this.props.navigation.state.params;
-        this.setState({title: title ? title : '', questions: questions ? questions : []});
+        const {title, questions, decks} = this.props.navigation.state.params;
+        this.setState({title, questions, decks});
     };
 
-    saveDeck = () => {
+    saveDeck = (title, questions) => {
         this.props.addDeck(this.state.title, this.state.questions);
+        // TODO: clean up
+        //  Lazy navigation change to make sure that if the user hits back they go tot he decklist first.
         this.props.navigation.navigate('DeckList');
+        this.props.navigation.navigate('Deck', {title, questions});
     };
 
     render() {
@@ -46,14 +49,16 @@ class EditDeck extends Component {
                                 onChangeText={(value) => {
                                     let newQuestions = questions;
                                     newQuestions[i] = {question: value, answer: question.answer};
-                                    this.setState({questions: newQuestions})}}/>
+                                    this.setState({questions: newQuestions})
+                                }}/>
                             <FormLabel>Answer</FormLabel>
                             <FormInput
                                 value={question.answer}
                                 onChangeText={(value) => {
                                     let newQuestions = questions;
                                     newQuestions[i] = {question: question.question, answer: value};
-                                    this.setState({questions: newQuestions})}}/>
+                                    this.setState({questions: newQuestions})
+                                }}/>
                         </View>
 
                     )
@@ -67,7 +72,7 @@ class EditDeck extends Component {
                 />
 
                 <Button
-                    onPress={this.saveDeck}
+                    onPress={() => this.saveDeck(title, questions)}
                     title="Save Deck"
                     backgroundColor="green"
                     color='white'
@@ -109,17 +114,10 @@ const styles = StyleSheet.create({
     }
 });
 
-const mapStateToProps = (state) => {
+const mapStateToProps = ({decks}) => {
     return {
-        decks: state.decks
-    }
-};
-const mapDispatchToProps = (dispatch) => {
-    return {
-        ...bindActionCreators({
-            addDeck
-        }, dispatch)
+        decks
     }
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(EditDeck)
+export default connect(mapStateToProps, {addDeck})(EditDeck)

@@ -8,22 +8,32 @@ import Deck from './components/Deck';
 import Quiz from './components/Quiz'
 import reducer from './reducers'
 import EditDeck from "./components/EditDeck";
+import {setLocalNotification} from './utils/helpers';
 
 const Stack = StackNavigator({
     DeckList: {
         screen: DeckList,
         navigationOptions: {
-            title: 'Quiz Decks'
+            headerLeft: null
         }
     },
     Deck: {
-        screen: Deck
+        screen: Deck,
+        navigationOptions: {
+            headerLeft: null
+        }
     },
     Quiz: {
-        screen: Quiz
+        screen: Quiz,
+        navigationOptions: {
+            headerLeft: null
+        }
     },
     EditDeck: {
-        screen: EditDeck
+        screen: EditDeck,
+        navigationOptions: {
+            headerLeft: null
+        }
     }
 });
 
@@ -74,6 +84,9 @@ const store = createStore(
     ));
 
 export default class App extends React.Component {
+    componentDidMount() {
+        setLocalNotification();
+    }
 
     render() {
         return (

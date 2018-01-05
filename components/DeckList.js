@@ -32,13 +32,10 @@ import {createArrayFromObject} from '../utils/helpers';
 // }
 
 class DeckList extends Component {
-    componentWillMount() {
-        // this.props.getDeckList();
-    }
 
     render() {
         const {decks} = this.props;
-        // const {navigate} = this.props.navigation;
+        const {navigate} = this.props.navigation;
 
         return (
             <View style={styles.deckList}>
@@ -51,7 +48,7 @@ class DeckList extends Component {
 
                     return (
                         <TouchableOpacity
-                            onPress={() => this.props.navigation.navigate('Deck', {title: title, questions: questions})}
+                            onPress={() => navigate('Deck', {title: title, questions: questions})}
                             style={styles.deckListItem}
                             key={`${title}-${questions.length}`}>
                             <View>
@@ -66,7 +63,7 @@ class DeckList extends Component {
                     );
                 })}
                 <TouchableOpacity
-                    onPress={() => this.props.navigation.navigate('EditDeck', {})}
+                    onPress={() => navigate('EditDeck', {title: '', questions: [], decks})}
                     style={styles.deckListItem}
                 >
                     <View>
@@ -101,12 +98,5 @@ const mapStateToProps = (state) => {
         decks: state.decks
     }
 };
-const mapDispatchToProps = (dispatch) => {
-    return {
-        ...bindActionCreators({
-            getDeckList: getDecks
-        }, dispatch)
-    }
-};
 
-export default connect(mapStateToProps, mapDispatchToProps)(DeckList)
+export default connect(mapStateToProps, {getDecks})(DeckList)
